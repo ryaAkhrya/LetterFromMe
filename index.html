@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buat Lu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .halaman-pembuka {
+            display: none;
+            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .halaman-pembuka.aktif {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .kotak-tengah {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #1a3a52;
+            margin-bottom: 20px;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+
+        p {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #1a3a52;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            background: white;
+            color: #2c3e50;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 15px rgba(74, 144, 226, 0.4);
+        }
+
+        button {
+            background: linear-gradient(135deg, #1a3a52 0%, #2c5364 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(26, 58, 82, 0.4);
+            background: linear-gradient(135deg, #2c5364 0%, #1a3a52 100%);
+        }
+
+        .konten-utama {
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+            display: none;
+            padding-bottom: 50px;
+        }
+
+        .konten-utama.aktif {
+            display: block;
+        }
+
+        .bagian-header {
+            background: linear-gradient(135deg, #1a3a52 0%, #0f2027 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .bagian-header h1 {
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .bagian-header p {
+            color: #e0e0e0;
+            font-size: 1.1em;
+        }
+
+        .wadah-session {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .kotak-session {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            border-left: 6px solid #4a90e2;
+            display: none;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        .kotak-session.aktif {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .kotak-session h2 {
+            color: #1a3a52;
+            margin-bottom: 25px;
+            font-size: 2em;
+            font-weight: 700;
+            border-bottom: 3px solid #4a90e2;
+            padding-bottom: 15px;
+        }
+
+        .kotak-session p {
+            color: #2c3e50;
+            line-height: 1.9;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+
+        .kotak-session ol {
+            margin-left: 25px;
+            color: #2c3e50;
+        }
+
+        .kotak-session li {
+            color: #2c3e50;
+            line-height: 1.9;
+            margin-bottom: 20px;
+            font-size: 1.05em;
+        }
+
+        .kotak-session li strong {
+            color: #1a3a52;
+            font-size: 1.1em;
+        }
+
+        .tombol-lanjut {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .tombol-lanjut button {
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            padding: 15px 50px;
+            font-size: 1.1em;
+        }
+
+        .tombol-lanjut button:hover {
+            background: linear-gradient(135deg, #357abd 0%, #4a90e2 100%);
+        }
+
+        .tombol-keputusan {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .tombol-terima {
+            background: linear-gradient(135deg, #357abd 0%, #357abd 100%);
+            padding: 18px 50px;
+            font-size: 1.15em;
+        }
+
+        .tombol-terima:hover {
+            background: linear-gradient(135deg, #357abd 0%, #357abd 100%);
+        }
+
+        .tombol-tolak {
+            background: linear-gradient(135deg, #357abd 0%, #4a90e2 100%);
+            padding: 18px 50px;
+            font-size: 1.15em;
+        }
+
+        .tombol-tolak:hover {
+            background: linear-gradient(135deg, #357abd 0%, #357abd 100%);
+        }
+
+        .pemutar-musik {
+            background: linear-gradient(135deg, #ecf0f1 0%, #d5dbdb 100%);
+            padding: 35px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+            border: 3px solid #4a90e2;
+        }
+
+        .pemutar-musik h3 {
+            color: #1a3a52;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .kotak-lirik {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid #4a90e2;
+        }
+
+        .kotak-lirik p {
+            color: #2c3e50;
+        }
+
+        .jendela-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 32, 39, 0.95);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .jendela-popup.aktif {
+            display: flex;
+        }
+
+        .isi-popup {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        }
+
+        .isi-popup h1 {
+            color: #1a3a52;
+        }
+
+        .isi-popup p {
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+
+        .layar-penolakan {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(231, 76, 60, 0.97);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .layar-penolakan.aktif {
+            display: flex;
+        }
+
+        .pesan-penolakan {
+            color: white;
+            font-size: 3em;
+            font-weight: bold;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            animation: goyang 0.5s infinite;
+        }
+
+        @keyframes goyang {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .teks-penting {
+            color: #1a3a52;
+            font-weight: 700;
+            font-size: 1.25em;
+            background: linear-gradient(135deg, #e8f4f8 0%, #d4e9f2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #4a90e2;
+            margin: 25px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Page 1: Input Nama -->
+    <div class="halaman-pembuka aktif" id="halamanPertama">
+        <div class="kotak-tengah">
+            <h1>Hai!</h1>
+            <p>Coba ketik nama lu dong</p>
+            <input type="text" id="inputNama" placeholder="Tulis nama kamu di sini...">
+            <button onclick="kirimNama()">Lanjutin</button>
+        </div>
+    </div>
+
+    <!-- Page 2: Konfirmasi Nama -->
+    <div class="halaman-pembuka" id="halamanKedua">
+        <div class="kotak-tengah">
+            <h1>Hai <span id="tampilkanNama"></span>!</h1>
+            <p>Mau aja gua suruh suruh</p>
+            <button onclick="keHalamanSelanjutnya(3)">Lanjut deh</button>
+        </div>
+    </div>
+
+    <!-- Page 3: Siapin Jantung -->
+    <div class="halaman-pembuka" id="halamanKetiga">
+        <div class="kotak-tengah">
+            <h1>Dor!</h1>
+            <p style="font-size: 1.3em; font-weight: bold; color: #1a3a52;">Siapin jantung ya.</p>
+            <button onclick="tampilkanAturan()">Iya, deh</button>
+        </div>
+    </div>
+
+    <!-- Popup Rules -->
+    <div class="jendela-popup" id="popupAturan">
+        <div class="isi-popup">
+            <h1>Rules</h1>
+            <p style="text-align: left; margin-bottom: 10px;">1. Baca semua dengan sepenuh hati</p>
+            <p style="text-align: left; margin-bottom: 10px;">2. Jangan skip-skip</p>
+            <p style="text-align: left; margin-bottom: 10px;">3. Screenshot kalo mau</p>
+            <button onclick="masukKeKontenUtama()">Masuk!</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="konten-utama" id="halamanUtama">
+        <div class="bagian-header">
+            <h1>Halo <span id="namaUtama"></span></h1>
+            <p>Selamat datang di website buatan Yudistira Bayuputra</p>
+        </div>
+
+        <div class="wadah-session">
+            <!-- Session 1: Intro -->
+            <div class="kotak-session aktif" id="sessionPertama">
+                <h2>SESSION 1: Intro</h2>
+                <p>Hai, gua Yudistira Bayuputra. Gua coba belajar bikin ginian lagi setelah sekian lama. Jadi, tolong dibaca sampai habis dengan sepenuh hati ya.</p>
+                <p>Gua bikin website ini sekalian belajar juga, karena gua seneng banget yang namanya website programming. Ya, kalo lu udah pernah diginiin sebelumnya, dan website gua ga sebagus itu. Maaf, ya. Tapi kalo lu belum pernah diginiin sebelumnya, selamat terkaget kaget ya.</p>
+                <p>Oke, langsung aja kita mulai.</p>
+                <div class="tombol-lanjut">
+                    <button onclick="bukaSession(2)">Lanjut ke Session 2 →</button>
+                </div>
+            </div>
+
+            <!-- Session 2: Tentang lu -->
+            <div class="kotak-session" id="sessionKedua">
+                <h2>SESSION 2: Tentang Lu</h2>
+                <p>Waktu pertama kali gua liat lu di discord, gua kaget. Karena ada cewek yang aura nya se "farming" ini. Banyak banget hal-hal unik yang lu munculin dari diri lu, makanya gua suka. Oke, gua bahas dikit dikit nih.</p>
+                <ol>
+                    <li><strong>Pertama</strong>, gua suka banget waktu lu ngejelasin tentang pengetahuan apapun itu. Entah sejarah, kelautan, mitologi, dan fakta fakta menarik dunia yang belum pernah gua ketahui sebelumnya. Entah kenapa, cewek pinter penuh pengetahuan itu sangat menarik di mata gua. Rasanya kayak punya internet 24 jam secara gratis.</li>
+                    <li><strong>Kedua</strong>, gua suka banget waktu lu nuntun gua pas di kereta. Rasanya kayak sedikit aneh, lu gaada gengsinya sama sekali buat nuntun gua.</li>
+                    <li><strong>Ketiga</strong>, gua suka banget tatapan mata lu. Lu itu tatapan serius ataupun bercandanya aja udah bikin gua salting gatau kenapa. Walaupun tatapan mata lu itu bikin gua salting, tapi gua suka banget kalo lu udah natap gua. Karena tatapan lu itu rasanya penuh perasaan cinta yang bergejolak buat gua.</li>
+                    <li><strong>Keempat</strong>, gua suka banget rambut pendek lu. Gua itu kan kalo main game, suka banget kalo liat cewek yang rambutnya pendek. Rasanya lebih menarik aja gitu. Gua ngeliat lu itu kayak ga ngebosenin banget. Rambut lu itu lucu banget di mata gua. Apalagi lu natap gua pake senyuman yang dalam.</li>
+                    <li><strong>Kelima</strong>, ini sebenernya hampir mirip sama yang pertama. Gua seneng banget waktu lu cerita. Entah itu tentang keluarga lu, temen temen lu, kehidupan kuliah lu, apapun itu. Rasanya gua kayak dianggep banget sama lu, waktu lu cerita banyak hal tentang kehidupan lu kayak gitu.</li>
+                </ol>
+                <div class="tombol-lanjut">
+                    <button onclick="bukaSession(3)">Lanjut ke Session 3 →</button>
+                </div>
+            </div>
+
+            <!-- Session 3: Kenapa Lu Berarti -->
+            <div class="kotak-session" id="sessionKetiga">
+                <h2>SESSION 3: Kenapa Lu Berarti Buat Gua</h2>
+                <p>Semenjak kenal lu, banyak yang berubah dari hidup gua. Mulai dari habit GYM gua yang makin rutin, gua jadi mulai baca buku, gua jadi suka nonton film. Gua gangerti, kenapa gua jadi berubah gini. Gua seneng banget. Secara ga langsung, lu itu udah ngubah hidup gua jadi lebih baik.</p>
+                <p>Keberadaan lu di hidup gua juga beda dari yang lain. Lu orangnya perhatian banget sama gua, bangga sama gua, selalu muji gua sampe gua salting. Gua merasa lebih percaya diri semenjak kenal lu.</p>
+                <div class="teks-penting">
+                    Lu emang bukan kisah cinta pertama gua, tapi lu bikin gua ngerasa punya "first love" lagi dalam hidup gua, DAN LU ITU NGUBAH BANYAK HAL DALAM HIDUP GUA JADI LEBIH BAIK LAGI.
+                </div>
+                <div class="tombol-lanjut">
+                    <button onclick="bukaSession(4)">Lanjut ke Session 4 →</button>
+                </div>
+            </div>
+
+            <!-- Session 4: Tujuan -->
+            <div class="kotak-session" id="sessionKeempat">
+                <h2>SESSION 4: Tujuan</h2>
+                <p>Lu mungkin bertanya tanya kenapa gua bikin website ini buat lu. Oke, gua jelasin.</p>
+                <div class="teks-penting" style="font-size: 1.2em;">
+                    Tujuan gua bikin website ini adalah, gua pengen minta lu jadi pacar gua, lu mau kah?
+                </div>
+                <div class="tombol-keputusan">
+                    <button class="tombol-tolak" onclick="ditolak()">KLIK INI BUAT NOLAK</button>
+                    <button class="tombol-terima" onclick="diterima()">KLIK INI BUAT NERIMA</button>
+                </div>
+            </div>
+
+            <!-- Session 5: Penutupan -->
+            <div class="kotak-session" id="sessionKelima">
+                <h2>SESSION 5: Penutupan</h2>
+                <p style="font-size: 1.25em; font-weight: bold; color: #27ae60;">Wow, gua ga percaya lu nerima gua jadi pacar lu. Makasih banyak ya.</p>
+                <p>Tapi sebelumnya, gua ada beberapa pesan buat kita berdua sebagai jembatan kita menuju ke jenjang pacaran.</p>
+                <p>Gua harap kita bertahan selama mungkin, atau selamanya. Entah apapun halangannya, mungkin jarak, sifat, sikap. Kita harus tetep komunikasi. Di hubungan ini, jangan pernah ada yang nutupi hal apapun satu sama lain. Karena kunci dari semua hubungan erat adalah <strong>KOMUNIKASI</strong>.</p>
+                <p style="font-size: 1.2em; margin-top: 30px;">Sekali lagi, Makasih banyak udah nerima gua jadi pacar lu. <strong>I love u 3000.</strong></p>
+                <p style="text-align: right; font-style: italic; margin-top: 20px; color: #1a3a52;">-Yudistira Bayuputra</p>
+                <div class="tombol-lanjut">
+                    <button onclick="bukaSession(6)">Lanjut ke Hadiah →</button>
+                </div>
+            </div>
+
+            <!-- Session 6: Hadiah -->
+            <div class="kotak-session" id="sessionKeenam">
+                <h2>SESSION 6: Hadiah</h2>
+                <p>Ini lagu pertama</p>
+                <div class="pemutar-musik">
+                    <h3>How Far - Yudistira</h3>
+                    <audio controls style="width: 100%; margin-bottom: 20px;">
+                        <source src="howfar.mp3" type="audio/mpeg">
+                        Browser kamu tidak support audio player.
+                    </audio>
+                    <div class="kotak-lirik">
+                        <p><em>
+Verse<br>
+<br>
+2 AM, light from my phone<br>
+<br>
+Your voice feels close on my room<br>
+<br>
+Same room, but different nights<br>
+<br>
+Missing you under city lights<br>
+<br>
+<br>
+
+Chorus<br>
+<br>
+How far is to feel your skin?<br>
+<br>
+How to feel your kiss again?<br>
+<br>
+Same love, just miles apart<br>
+<br>
+Tell me baby, how far’s your heart?<br>
+<br>
+<br>
+
+Verse<br>
+<br>
+Late replies, different time zones<br>
+<br>
+Talking like we’re not alone<br>
+<br>
+I replay things you used to say<br>
+<br>
+Just to get through another day<br>
+<br>
+<br>
+
+Everyone says “it’s not that bad”<br>
+<br>
+But they don’t feel what we have<br>
+<br>
+Loving you from far away<br>
+<br>
+Feels like losing you every day<br>
+<br>
+<br>
+
+Chorus<br>
+<br>
+How far is to feel your skin?<br>
+<br>
+How to feel your kiss again?<br>
+<br>
+Same love, just miles apart<br>
+<br>
+Tell me baby, how far’s your heart?<br>
+<br>
+<br>
+
+Bridge<br>
+<br>
+If time’s a wall, I’ll climb it slow<br>
+<br>
+Every second brings me close<br>
+<br>
+Even oceans can’t erase<br>
+<br>
+way your name still knows my face<br>
+<br>
+<br>
+
+Verse<br>
+<br>
+2 AM, light from my phone<br>
+<br>
+Your voice feels close but I’m still alone<br>
+<br>
+Same room, different nights<br>
+<br>
+Missing you under city lights<br>
+<br>
+<br>
+
+Chorus<br>
+<br>
+How far is to feel your skin?<br>
+<br>
+How to feel your kiss again?<br>
+<br>
+Same love, just miles apart<br>
+<br>
+Tell me baby, how far’s your heart?<br>
+<br>
+<br>
+
+Bridge (End)<br>
+<br>
+If time’s a wall, I’ll climb it slow<br>
+<br>
+Every second brings me close<br>
+<br>
+Even oceans can’t erase<br>
+<br>
+way your name still knows my face<br>
+</em></p>
+                        <p style="margin-top: 20px;"><strong></strong></p>
+                    </div>
+                </div>
+                <div class="tombol-lanjut">
+                   <button onclick="bukaSession(7)">Lanjut ke Hadiah Terakhir</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Session 7: Hadiah -->
+<div class="kotak-session" id="sessionKetujuh">
+    <h2>SESSION 7: Hadiah</h2>
+    <p>Masih ada satu hadiah terakhir buat lu</p>
+    <div class="pemutar-musik">
+        <h3>Train</h3>
+        <audio controls style="width: 100%; margin-bottom: 20px;">
+            <source src="train.mp3" type="audio/mpeg">
+            Browser kamu tidak support audio player.
+        </audio>
+
+        <div class="kotak-lirik">
+            <p><em>Verse<br>
+I remember the first time we locked eyes<br>
+<br>
+crowded city, but you felt so close<br>
+<br>
+my heart was racing, no place to hide<br>
+<br>
+everything moved in slow motion<br>
+<br>
+<br>
+
+I still feel it when I think back<br>
+<br>
+i dont know how fast my heartbeat ran<br>
+<br>
+from a simple little moment<br>
+<br>
+we got closer on that train<br>
+<br>
+<br>
+
+Pre-Chorus<br>
+<br>
+my chest was loud, I couldn’t lie<br>
+<br>
+something real was starting there<br>
+<br>
+I followed you without a thought<br>
+<br>
+didn’t care where<br>
+<br>
+<br>
+
+Chorus<br>
+<br>
+same train, sitting side by side<br>
+<br>
+your arm brushing into mine<br>
+<br>
+every second passing by<br>
+<br>
+pulling you closer every time<br>
+<br>
+<br>
+
+Pre-Chorus<br>
+<br>
+my chest was loud, I couldn’t lie<br>
+<br>
+something real was starting there<br>
+<br>
+I followed you without a thought<br>
+<br>
+didn’t care where<br>
+<br>
+<br>
+
+Chorus<br>
+<br>
+same train, sitting side by side<br>
+<br>
+your arm brushing into mine<br>
+<br>
+every second passing by<br>
+<br>
+pulling you closer every time<br>
+<br>
+<br>
+
+Bridge (End)<br>
+<br>
+if the nights get heavy<br>
+<br>
+and the days move fast<br>
+<br>
+I wanna be the place you stay<br>
+<br>
+not just something in the past<br>
+
+</em></p>
+            <p style="margin-top: 20px;">
+                <strong></strong>
+            </p>
+        </div>
+    </div>
+
+   <div class="tombol-lanjut">
+                  <button onclick="bukaSession(8)">Lanjut ke Video</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Session 8: Video -->
+<div class="kotak-session" id="sessionKedelapan">
+    <h2>SESSION 8: Video</h2>
+    <p>Ini hadiah terakhir banget dari gua.</p>
+
+    <div class="pemutar-musik">
+        <h3>Video</h3>
+        <video controls style="width: 100%; border-radius: 10px;">
+            <source src="0113.mp4" type="video/mp4">
+            Browser kamu tidak support video.
+        </video>
+
+        <div class="kotak-lirik">
+            <p>
+                Simpen ya videonya!
+            </p>
+        </div>
+    </div>
+
+    <div class="tombol-lanjut">
+        <button onclick="tutupWebsite()">Akhiri Website</button>
+    </div>
+</div>
+
+
+    <!-- Reject Overlay -->
+    <div class="layar-penolakan" id="layarPenolakanUtama">
+        <div class="pesan-penolakan">TERIMA LAH ANJENGGG!</div>
+    </div>
+
+    <script>
+        let namaPengguna = '';
+
+        function kirimNama() {
+            const inputanNama = document.getElementById('inputNama').value.trim();
+            if (inputanNama === '') {
+                alert('Isi nama dulu dong!');
+                return;
+            }
+            namaPengguna = inputanNama;
+            document.getElementById('tampilkanNama').textContent = namaPengguna;
+            document.getElementById('namaUtama').textContent = namaPengguna;
+            keHalamanSelanjutnya(2);
+        }
+
+        function keHalamanSelanjutnya(nomorHalaman) {
+            const semuaHalaman = document.querySelectorAll('.halaman-pembuka');
+            semuaHalaman.forEach(halaman => halaman.classList.remove('aktif'));
+            
+            if (nomorHalaman === 2) {
+                document.getElementById('halamanKedua').classList.add('aktif');
+            } else if (nomorHalaman === 3) {
+                document.getElementById('halamanKetiga').classList.add('aktif');
+            }
+        }
+
+        function tampilkanAturan() {
+            document.getElementById('popupAturan').classList.add('aktif');
+        }
+
+        function masukKeKontenUtama() {
+            document.getElementById('popupAturan').classList.remove('aktif');
+            document.querySelectorAll('.halaman-pembuka').forEach(halaman => halaman.style.display = 'none');
+            document.getElementById('halamanUtama').classList.add('aktif');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+function bukaSession(nomorSession) {
+    const sessionYangDibuka = document.getElementById('session' + 
+        (nomorSession === 2 ? 'Kedua' : 
+         nomorSession === 3 ? 'Ketiga' : 
+         nomorSession === 4 ? 'Keempat' : 
+         nomorSession === 5 ? 'Kelima' : 
+         nomorSession === 6 ? 'Keenam' : 
+         nomorSession === 7 ? 'Ketujuh' : 'Kedelapan'));
+
+    sessionYangDibuka.classList.add('aktif');
+
+    setTimeout(() => {
+        sessionYangDibuka.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+}
+
+
+
+        function ditolak() {
+            const layarPenolakan = document.getElementById('layarPenolakanUtama');
+            layarPenolakan.classList.add('aktif');
+            setTimeout(() => {
+                layarPenolakan.classList.remove('aktif');
+            }, 2000);
+        }
+
+        function diterima() {
+            bukaSession(5);
+        }
+
+        function tutupWebsite() {
+            alert('Thank you! \n\nSemoga hubungan kita langgeng ya!\n- Yudistira Bayuputra');
+        }
+    </script>
+</body>
+</html>
